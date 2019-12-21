@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>GuessIndicator.qml</file>
+        <file>UserGuessButton.qml</file>
+        <file>CurrentItemToGuessIndicator.qml</file>
+    </qresource>
+</RCC>
