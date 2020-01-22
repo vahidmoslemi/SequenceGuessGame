@@ -63,7 +63,7 @@ public:
     void UserGuessed(const vector<char>& guessed_sequence){ user_guessed_sequence_ = guessed_sequence;}
     vector<char> GetGuessResult(){ return result_processor_(random_sequence_,user_guessed_sequence_);}
 
-    void HandleEvent(string event,map<string,string> params);
+    void handleEvent(string event,map<string,string> params) override;
 
 private:
     vector<char> random_sequence_;

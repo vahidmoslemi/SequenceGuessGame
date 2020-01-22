@@ -3,18 +3,13 @@
 
 #include <string>
 #include <map>
-using namespace std;
 
 class EventListenerInterface
 {
 public:
     EventListenerInterface();
     virtual ~EventListenerInterface();
-    virtual void HandleEvent(string event,map<string,string> params)=0;
-    void SetListenerId(int id){listener_id_ = id;}
-    int GetListenerId();
-private:
-    int listener_id_;
+    virtual void handleEvent(std::string event,std::map<std::string,std::string> params)=0;
 };
 
 #endif // EVENTLISTENERINTERFACE_H

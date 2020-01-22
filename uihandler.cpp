@@ -1,6 +1,6 @@
 #include "uihandler.h"
 
-UIHandler::UIHandler(QQmlApplicationEngine* engine, int steps_count, QObject *parent) : QObject(parent)
+UIHandler::UIHandler(std::unique_ptr<QQmlApplicationEngine>& engine, int steps_count, QObject *parent) : QObject(parent)
 {
     //initialze UI: access to qml ui context
     app_ui_context_ = engine->rootContext();
@@ -71,7 +71,7 @@ void UIHandler::evaluateUserGuess()
 }
 
 
-void UIHandler::HandleEvent(string event, map<string, string> params)
+void UIHandler::handleEvent(string event, map<string, string> params)
 {
     if(event=="GuessResultCalculated")
     {

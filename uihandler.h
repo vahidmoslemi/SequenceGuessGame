@@ -9,7 +9,7 @@
 #include <QDebug>
 #include <map>
 #include <string>
-using namespace std;
+#include <memory>
 
 #include "eventlistenerinterface.h"
 #include "eventsourceinterface.h"
@@ -29,7 +29,7 @@ public:
      * @param ctxt
      * @param parent
      */
-    explicit UIHandler(QQmlApplicationEngine* engine, int steps_count=3, QObject *parent = nullptr);
+    explicit UIHandler(std::unique_ptr<QQmlApplicationEngine>& engine, int steps_count=3, QObject *parent = nullptr);
     ~UIHandler() override;
 
     //invokable method to be accessed from qml to inform cpp part of qml ui changes
@@ -44,7 +44,7 @@ public:
     Q_INVOKABLE void gotoNextStep(QString selected_char);
     Q_INVOKABLE void evaluateUserGuess();
 
-    void HandleEvent(string event, map<string, string> params) override;
+    void handleEvent(string event, map<string, string> params) override;
 
 
 signals:

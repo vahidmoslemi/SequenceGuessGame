@@ -19,7 +19,9 @@ ApplicationWindow {
     onUserGuessedSuccessfully: {
         console.log("You Successfully Guessed the right sequence.\nTry to guess a new Sequence ;-)")
 //        alert("You Successfully Guessed the right sequence.\nTry to guess a new Sequence ;-)")
-        msgDialog.open();
+
+        //Comment to run in android: needs to be checked
+//        msgDialog.open();
     }
 
     GridView{

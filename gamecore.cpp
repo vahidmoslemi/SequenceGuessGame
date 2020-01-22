@@ -15,7 +15,7 @@ void GameCore::StartNewGame()
 #endif
 }
 
-void GameCore::HandleEvent(string event, map<string,string> params)
+void GameCore::handleEvent(string event, map<string,string> params)
 {
     if(event=="EvaluateUserGuess")
     {

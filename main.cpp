@@ -3,6 +3,7 @@
 #include <QQmlContext>
 
 #include <random>
+#include <memory>
 
 #include "gamecore.h"
 #include "strategyfunctions.h"
@@ -15,7 +16,8 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    QQmlApplicationEngine* engine =  new QQmlApplicationEngine();
+    auto engine = std::unique_ptr<QQmlApplicationEngine>(new QQmlApplicationEngine());
+
     engine->load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     if (engine->rootObjects().isEmpty())
@@ -24,18 +26,17 @@ int main(int argc, char *argv[])
     const int ksequence_length = 3;
 
 
-    GameCore* game_core (new GameCore(
+    auto game_core = std::make_shared<GameCore>(
                              StrategyFunctions::GetSequenceGenerator(),
                              ksequence_length,
                              StrategyFunctions::GetResultProcessor()
-                             )
                          );
     game_core->StartNewGame();
 
-    UIHandler* ui_handler(new UIHandler(engine));
+    auto ui_handler = std::make_shared<UIHandler>(engine);
 
-    ui_handler->RegisterEventListener(dynamic_cast<EventListenerInterface*>(game_core));
-    game_core->RegisterEventListener(dynamic_cast<EventListenerInterface*>(ui_handler));
+    ui_handler->registerEventListener(game_core);
+    game_core->registerEventListener(ui_handler);
 
     //---------------------------------------------------------------------------
 
