@@ -20,7 +20,7 @@ void EventSourceInterface::unRegisterEventListener(std::shared_ptr<EventListener
 //    std::lock_guard<std::mutex> lock(shared_buffer_lock);
     //use find_if instead of find because it gets the predicate. o.w error will occure
     auto pos = std::find_if(m_regisered_listeners.begin(),m_regisered_listeners.end(),
-                         [&listener](std::weak_ptr<EventListenerInterface> item){
+                         [&listener](std::weak_ptr<EventListenerInterface> item) -> bool {
                                return listener == item.lock();
                          });
     if(pos!=m_regisered_listeners.end())
@@ -34,7 +34,7 @@ void EventSourceInterface::notify(std::string event, std::map<std::string, std::
     //IMPORTANT
     //-----------------------------------------------------------------------------------------------------------------
     //if you uncomment the line bellow, application will fell into a deadlock when you guess the right sequence
-    //because all the core is running in a single thread (we have another thread for UI, thanks to Qt)
+    //because all of the core is running in a single thread (we have another thread for UI, thanks to Qt)
     //Then When we are in notify, cpu is fully dedicated to this method untile it completes,
     //inside handleEvent method of uiHandler, we have run again notify to let GameCore to generate a new sequence to
     //guess, and because of the line bellow, it will wait for the lock to be release.
@@ -44,12 +44,13 @@ void EventSourceInterface::notify(std::string event, std::map<std::string, std::
 //    std::lock_guard<std::mutex> lock(shared_buffer_lock);
 
     std::for_each(m_regisered_listeners.begin(),m_regisered_listeners.end(),
-                  [event,params](std::weak_ptr<EventListenerInterface> listener){
-            std::shared_ptr<EventListenerInterface> plistener = listener.lock();
-            if(plistener)
-            {
-                plistener->handleEvent(event,params);
-            }
-        }
+                  [&event,&params](std::weak_ptr<EventListenerInterface> listener) -> void
+                  {
+                    std::shared_ptr<EventListenerInterface> plistener = listener.lock();
+                    if(plistener)
+                    {
+                        plistener->handleEvent(event,params);
+                    }
+                  }
     );
 }
