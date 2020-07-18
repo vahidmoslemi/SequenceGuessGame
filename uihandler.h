@@ -16,7 +16,7 @@
 
 #define DEFAULT_INDICATOR_COLOR "#E8E8E8"
 
-class UIHandler : public QObject , public EventSourceInterface , public EventListenerInterface
+class UIHandler : public QObject , public EventSource , public EventListenerInterface
 {
     Q_OBJECT
 public:

@@ -43,7 +43,7 @@ void PrintVector(T items,std::string msg)
     cout<<endl;
 }
 
-class GameCore : public EventListenerInterface, public EventSourceInterface
+class GameCore : public EventListenerInterface, public EventSource
 {
 public:
     GameCore(): m_random_sequence_length{1}{std::cout<<"random sequence default length: "<<m_random_sequence_length<<std::endl;}
