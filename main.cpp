@@ -2,7 +2,6 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
-#include <random>
 #include <memory>
 
 #include "gamecore.h"

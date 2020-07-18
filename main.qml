@@ -1,6 +1,6 @@
 import QtQuick 2.9
 import QtQuick.Window 2.2
-import QtQuick.Controls 2.3
+import QtQuick.Controls 2.12
 import QtQuick.Dialogs 1.2
 
 ApplicationWindow {
@@ -17,11 +17,13 @@ ApplicationWindow {
 
     signal userGuessedSuccessfully;
     onUserGuessedSuccessfully: {
-        console.log("You Successfully Guessed the right sequence.\nTry to guess a new Sequence ;-)")
+//        console.log("You Successfully Guessed the right sequence.\nTry to guess a new Sequence ;-)")
 //        alert("You Successfully Guessed the right sequence.\nTry to guess a new Sequence ;-)")
 
         //Comment to run in android: needs to be checked
-//        msgDialog.open();
+        alertDialog.text = "You Successfully Guessed the right sequence.\nTry to guess a new Sequence ;-)";
+        alertDialog.title = "Congratulation";
+        alertDialog.open();
     }
 
     GridView{
@@ -104,16 +106,15 @@ ApplicationWindow {
     }
 
     Dialog {
-        id: msgDialog
-        title: "Congratulation!!!"
-        standardButtons: Dialog.Ok
+        id: alertDialog
         modality: Qt.ApplicationModal
-        width: mainwindow.width/2
-        height: mainwindow.height/2
-
+        property string text : ""
         Label {
-            text:"You Successfully Guessed the right sequence.\nTry to guess a new Sequence ;-)"
+            text: alertDialog.text
+            wrapMode: Text.Wrap
+            width: parent.width
         }
+        width: parent.width*0.8
     }
 
     /*

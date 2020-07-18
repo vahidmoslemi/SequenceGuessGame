@@ -16,8 +16,6 @@
 
 #define DEFAULT_INDICATOR_COLOR "#E8E8E8"
 
-using namespace std;
-
 class UIHandler : public QObject , public EventSourceInterface , public EventListenerInterface
 {
     Q_OBJECT
@@ -44,7 +42,7 @@ public:
     Q_INVOKABLE void gotoNextStep(QString selected_char);
     Q_INVOKABLE void evaluateUserGuess();
 
-    void handleEvent(string event, map<string, string> params) override;
+    void handleEvent(std::string event, std::map<std::string, std::string> params) override;
 
 
 signals:
@@ -52,17 +50,18 @@ signals:
     void userGuessedSuccessfully();
 public slots:
 private:
-    QQmlContext* app_ui_context_;
-    QVariantList guess_result_data_model_;
-    QVariantList user_guess_data_model_;
-    QString user_guessed_sequence_;
-    QVariantList current_item_model_;
-    int steps_count_;
-    int current_item_index_;
+    //qml related data models and ui context
+    QQmlContext* m_app_ui_context;
+    QVariantList m_guess_result_data_model;
+    QVariantList m_user_guess_data_model;
+    QString m_user_guessed_sequence;
+    QVariantList m_current_item_model;
+    int m_steps_count;
+    int m_current_item_index;
 
     //TODO: indicator colors list could be changed in the future to support application
     //development and strategy change
-    vector<string> result_indicator_colors_ {"red","orange","green"};
+    std::vector<std::string> m_result_indicator_colors {"red","orange","green"};
 
     void reset_game();
 };

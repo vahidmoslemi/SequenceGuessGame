@@ -3,9 +3,9 @@
 UIHandler::UIHandler(std::unique_ptr<QQmlApplicationEngine>& engine, int steps_count, QObject *parent) : QObject(parent)
 {
     //initialze UI: access to qml ui context
-    app_ui_context_ = engine->rootContext();
-    steps_count_ = steps_count;
-    app_ui_context_->setContextProperty("uihandler",this);
+    m_app_ui_context = engine->rootContext();
+    m_steps_count = steps_count;
+    m_app_ui_context->setContextProperty("uihandler",this);
 
     QObject* viewObject = engine->rootObjects()[0];
     connect(this,SIGNAL(userGuessedSuccessfully()),viewObject,SIGNAL(userGuessedSuccessfully()));
@@ -16,81 +16,82 @@ UIHandler::UIHandler(std::unique_ptr<QQmlApplicationEngine>& engine, int steps_c
 
 UIHandler::~UIHandler()
 {
-    delete app_ui_context_;
+    delete m_app_ui_context;
 }
 
 void UIHandler::gotoNextStep(QString selected_char)
 {
-    user_guess_data_model_[current_item_index_] = "      "+selected_char+"      ";
+    m_user_guess_data_model[m_current_item_index] = "      "+selected_char+"      ";
 //    qDebug()<<Q_FUNC_INFO<<" selected chars:" <<user_guess_data_model_;
-    app_ui_context_->setContextProperty("userGuessListModel", user_guess_data_model_);
-    current_item_model_[current_item_index_]=0;
-    user_guessed_sequence_[current_item_index_] = selected_char.at(0);
-    ++current_item_index_;
+    m_app_ui_context->setContextProperty("userGuessListModel", m_user_guess_data_model);
+    m_current_item_model[m_current_item_index]=0;
+    m_user_guessed_sequence[m_current_item_index] = selected_char.at(0);
+    ++m_current_item_index;
 
-    if(current_item_index_==steps_count_)
+    if(m_current_item_index==m_steps_count)
     {
         //We can add a dedicated button to invoke result calculation
         //but I have commented it in main.qml last part, in order to serve exact project senario
         //and evaluateUserGuess in invoked automaically after 3 button presses and result will shown on top
         evaluateUserGuess();
-        current_item_index_ = 0;
+        m_current_item_index = 0;
     }
-    current_item_model_[current_item_index_]=1;
-    app_ui_context_->setContextProperty("currentItemIndicatorModel", current_item_model_);
+    m_current_item_model[m_current_item_index]=1;
+    m_app_ui_context->setContextProperty("currentItemIndicatorModel", m_current_item_model);
 }
 
 
 void UIHandler::reset_game()
 {
-    current_item_index_=0;
-    user_guess_data_model_.clear();
-    current_item_model_.clear();
-    guess_result_data_model_.clear();
+    m_current_item_index=0;
+    m_user_guess_data_model.clear();
+    m_current_item_model.clear();
+    m_guess_result_data_model.clear();
 
     //default initlaization of user_guess_data_model_
-    for(int ctr=0;ctr<steps_count_;ctr++)
+    for(int ctr=0;ctr<m_steps_count;ctr++)
     {
         //last color element in result_indicator_colors_ vector is DEFAULT_INDICATOR_COLOR
-        guess_result_data_model_.append(DEFAULT_INDICATOR_COLOR);
-        user_guess_data_model_.append("      ?      ");
-        current_item_model_.append(static_cast<int>(current_item_index_ == ctr));
-        user_guessed_sequence_.append('?');
+        m_guess_result_data_model.append(DEFAULT_INDICATOR_COLOR);
+        m_user_guess_data_model.append("      ?      ");
+        m_current_item_model.append(static_cast<int>(m_current_item_index == ctr));
+        m_user_guessed_sequence.append('?');
     }
-    current_item_model_[0]=1;
-    app_ui_context_->setContextProperty("userGuessListModel", user_guess_data_model_);
-    app_ui_context_->setContextProperty("currentItemIndicatorModel", current_item_model_);
-    app_ui_context_->setContextProperty("guessResultModel", guess_result_data_model_);
+    m_current_item_model[0]=1;
+    m_app_ui_context->setContextProperty("userGuessListModel", m_user_guess_data_model);
+    m_app_ui_context->setContextProperty("currentItemIndicatorModel", m_current_item_model);
+    m_app_ui_context->setContextProperty("guessResultModel", m_guess_result_data_model);
 }
 
 void UIHandler::evaluateUserGuess()
 {
-    map<string,string> params;
-    params.insert(pair<string,string>("GuessedSequence",user_guessed_sequence_.toStdString()));
+    std::map<std::string,std::string> params;
+    //automatic type inference in modern c++
+    params.insert({"GuessedSequence",m_user_guessed_sequence.toStdString()});
     notify("EvaluateUserGuess",params);
 }
 
 
-void UIHandler::handleEvent(string event, map<string, string> params)
+void UIHandler::handleEvent(std::string event, std::map<std::string, std::string> params)
 {
     if(event=="GuessResultCalculated")
     {
-        string str_result_seq = params.at("GuessResult");
-        guess_result_data_model_.clear();
+        auto str_result_seq = params.at("GuessResult");
+        m_guess_result_data_model.clear();
         char result_sum = 0;
         for(auto& result_code: str_result_seq)
         {
-            guess_result_data_model_.append(QString::fromStdString(result_indicator_colors_[static_cast<unsigned long>(result_code)]));
+            m_guess_result_data_model.append(QString::fromStdString(m_result_indicator_colors[static_cast<unsigned long>(result_code)]));
             result_sum+= result_code;
         }
-        app_ui_context_->setContextProperty("guessResultModel", guess_result_data_model_);
+        m_app_ui_context->setContextProperty("guessResultModel", m_guess_result_data_model);
 
         //if user guessed correct sequence
         if(result_sum==6)
         {
             emit(userGuessedSuccessfully());
             reset_game();
-            notify("StartNewGame",map<string,string>());
+            notify("StartNewGame",{});
         }
     }
 }
