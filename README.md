@@ -39,3 +39,5 @@ different position
       EventListenerInterface and EventSourceIComponent
     • both GameCore and UIHandler are drived from these classes and connected to each other using 
       RegisterEventListener method. And interact with each other using Notify and HandlerEvent functions
+
+# Fill free to use my my codes but please refer to my github page address.
