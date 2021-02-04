@@ -65,14 +65,14 @@ void UIHandler::reset_game()
 
 void UIHandler::evaluateUserGuess()
 {
-    std::map<std::string,std::string> params;
+    std::unordered_map<std::string,std::string> params;
     //automatic type inference in modern c++
     params.insert({"GuessedSequence",m_user_guessed_sequence.toStdString()});
     notify("EvaluateUserGuess",params);
 }
 
 
-void UIHandler::handleEvent(std::string event, std::map<std::string, std::string> params)
+void UIHandler::handleEvent(std::string event, std::unordered_map<std::string, std::string> params)
 {
     if(event=="GuessResultCalculated")
     {

@@ -7,7 +7,7 @@
 #include <QQuickItem>
 #include <memory>
 #include <QDebug>
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <memory>
 
@@ -42,7 +42,7 @@ public:
     Q_INVOKABLE void gotoNextStep(QString selected_char);
     Q_INVOKABLE void evaluateUserGuess();
 
-    void handleEvent(std::string event, std::map<std::string, std::string> params) override;
+    void handleEvent(std::string event, std::unordered_map<std::string, std::string> params) override;
 
 
 signals:

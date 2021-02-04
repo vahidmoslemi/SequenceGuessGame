@@ -24,7 +24,7 @@
 #include "eventsourceinterface.h"
 
 //define CharSequence as alias for vector of characters
-using CharSequence = std::vector<char>;
+using CharSequence = std::vector<char>; //equivalent to : typedef std::vector<char> CharSequence;
 
 //Alias type GameResultProcessor: funtion/lamda which gets 2 English Alphabets vectors and
 // process their values and return a vector of int as result
@@ -38,9 +38,9 @@ template<typename T>
 void PrintVector(T items,std::string msg)
 {
     using namespace std;
-    cout<<msg<<endl;
+    std::cout<<msg<<endl;
     std::for_each(std::begin(items),std::end(items),[](auto item){cout<<item;});
-    cout<<endl;
+    std::cout<<endl;
 }
 
 class GameCore : public EventListenerInterface, public EventSource
@@ -62,7 +62,7 @@ public:
     void UserGuessed(const CharSequence& t_guessed_sequence){ m_user_guessed_sequence = t_guessed_sequence;}
     CharSequence GetGuessResult(){ return m_result_processor(m_random_sequence,m_user_guessed_sequence);}
 
-    void handleEvent(std::string event,std::map<std::string,std::string> params) override;
+    void handleEvent(std::string event,std::unordered_map<std::string,std::string> params) override;
 
 private:
     CharSequence m_random_sequence;

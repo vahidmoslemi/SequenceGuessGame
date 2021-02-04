@@ -15,7 +15,7 @@ void GameCore::StartNewGame()
 #endif
 }
 
-void GameCore::handleEvent(std::string event, std::map<std::string,std::string> params)
+void GameCore::handleEvent(std::string event, std::unordered_map<std::string,std::string> params)
 {
     if(event=="EvaluateUserGuess")
     {
@@ -23,7 +23,7 @@ void GameCore::handleEvent(std::string event, std::map<std::string,std::string> 
         m_user_guessed_sequence = CharSequence(guessed_seq.begin(),guessed_seq.end());
 
         CharSequence guess_result = GetGuessResult();
-        std::map<std::string,std::string> params;
+        std::unordered_map<std::string,std::string> params;
         params.insert(std::pair<std::string,std::string>("GuessResult",std::string(guess_result.begin(),guess_result.end())));
         notify("GuessResultCalculated",params);
     }

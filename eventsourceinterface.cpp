@@ -27,7 +27,7 @@ void EventSource::unRegisterEventListener(std::shared_ptr<EventListenerInterface
     }
 }
 
-void EventSource::notify(std::string event, std::map<std::string, std::string> params)
+void EventSource::notify(std::string event, std::unordered_map<std::string, std::string> params)
 {
     std::for_each(m_regisered_listeners.begin(),m_regisered_listeners.end(),
                   [&event,&params](std::weak_ptr<EventListenerInterface> listener) -> void
