@@ -40,4 +40,4 @@ different position
     • both GameCore and UIHandler are drived from these classes and connected to each other using 
       RegisterEventListener method. And interact with each other using Notify and HandlerEvent functions
 
-# Feel free to use any code snippet, but refer to my github page.
+# Feel free to use any code snippet, but cite to my github page.
